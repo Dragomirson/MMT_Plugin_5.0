@@ -1,8 +1,7 @@
 //Copyright(c) 2016 Viktor Kuropiatnyk "BoredEngineer"
 
-#include "MMTPluginPCH.h"
 #include "MMTBPFunctionLibrary.h"
-
+//#include "MMTPluginPCH.h"
 
 //For UE4 Profiler ~ Stat
 //DECLARE_CYCLE_STAT(TEXT("MMT ~ Get Transform Component"), STAT_MMTGetTransformComponent, STATGROUP_MMT);
@@ -122,7 +121,7 @@ void UMMTBPFunctionLibrary::MMTSetInertiaTensor(UPrimitiveComponent * Target, co
 	FBodyInstance* BodyInstance = GetBodyInstance(Target);
 	if (BodyInstance != NULL) {
 		FPhysicsActorHandle PhyiscsActor = BodyInstance->GetPhysicsActorHandle();
-		if (PhyiscsActor.IsValid())
+		if (FPhysicsInterface::IsValid(PhyiscsActor))//NordVader edits=) old (PhyiscsActor.isValid()) | new(FPhysicsInterface::IsValid(PhyiscsActor))
 		{
 			FPhysicsInterface::SetMassSpaceInertiaTensor_AssumesLocked(PhyiscsActor, InertiaTensor);
 		}
@@ -140,9 +139,9 @@ UMeshComponent* UMMTBPFunctionLibrary::GetMeshComponentReferenceByName(UActorCom
 	if (IsValid(Target))
 	{
 		AActor* Owner = Target->GetOwner();
-		//TArray<UActorComponent*> FoundComponents = Owner->GetComponentsByClass(UMeshComponent::StaticClass()); //flagged as deprecated in 4.24
-		TArray<UActorComponent*> FoundComponents;
-		Owner->GetComponents(UMeshComponent::StaticClass(), FoundComponents);
+		
+		TArray<UMeshComponent*> FoundComponents;
+		Owner->GetComponents(FoundComponents);
 
 		UMeshComponent* Result;
 
@@ -167,10 +166,10 @@ USplineComponent* UMMTBPFunctionLibrary::GetSplineComponentReferenceByName(UActo
 	if (IsValid(Target))
 	{
 		AActor* Owner = Target->GetOwner();
-		//TArray<UActorComponent*> FoundComponents = Owner->GetComponentsByClass(USplineComponent::StaticClass());//flagged as deprecated in 4.24
-		TArray<UActorComponent*> FoundComponents;
-		Owner->GetComponents(USplineComponent::StaticClass(), FoundComponents);
-		
+
+		TArray<USplineComponent*> FoundComponents;
+		Owner->GetComponents(FoundComponents);
+
 		USplineComponent* Result;
 
 		for (int32 i = 0; i < FoundComponents.Num(); i++)
@@ -194,9 +193,9 @@ UInstancedStaticMeshComponent* UMMTBPFunctionLibrary::GetInstancedStaticMeshComp
 	if (IsValid(Target))
 	{
 		AActor* Owner = Target->GetOwner();
-		//TArray<UActorComponent*> FoundComponents = Owner->GetComponentsByClass(UInstancedStaticMeshComponent::StaticClass()); //flagged as deprecated in 4.24
-		TArray<UActorComponent*> FoundComponents;
-		Owner->GetComponents(UInstancedStaticMeshComponent::StaticClass(), FoundComponents);
+
+		TArray<UInstancedStaticMeshComponent*> FoundComponents;
+		Owner->GetComponents(FoundComponents);
 
 		UInstancedStaticMeshComponent* Result;
 
